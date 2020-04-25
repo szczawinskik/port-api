@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
+using Database.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Web.Configuration;
 
@@ -25,7 +19,18 @@ namespace Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureTestingServices(IServiceCollection services)
+        {
+            services.ConfigureTestingAppContext(Configuration);
+            ConfigureServices(services);
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.ConfigureDevelopmentAppContext();
+            ConfigureServices(services);
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -38,7 +43,6 @@ namespace Web
 
             services.ConfigureAppServices();
             services.ConfigureLogger();
-            services.ConfigureAppContext();
             services.ConfigureAppRepositories();
             services.ConfigureValidators();
         }
@@ -50,6 +54,13 @@ namespace Web
             {
                 app.UseDeveloperExceptionPage();
                 app.SeedDatabase();
+            } else
+            {
+                using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                    context.Database.EnsureCreated();
+                }
             }
 
             app.UseSwagger();
@@ -60,10 +71,7 @@ namespace Web
                 c.RoutePrefix = "swagger/ui";
             });
 
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
