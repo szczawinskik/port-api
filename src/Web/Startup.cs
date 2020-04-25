@@ -40,6 +40,7 @@ namespace Web
             services.ConfigureLogger();
             services.ConfigureAppContext();
             services.ConfigureAppRepositories();
+            services.ConfigureValidators();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
