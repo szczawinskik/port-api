@@ -30,7 +30,10 @@ namespace Database.Repositories
 
         public Ship Find(int id)
         {
-            return context.Ships.First(x => x.Id == id);
+            return context.Ships
+                .Include(x => x.Schedules)
+                .Include(x => x.ShipOwner)
+                .First(x => x.Id == id);
         }
 
         public void Update(Ship entity)

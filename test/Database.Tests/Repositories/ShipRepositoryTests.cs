@@ -71,7 +71,7 @@ namespace Database.Tests.TestDoubles
         [Test]
         public void ShouldReturnEntityById()
         {
-            var entity = new Ship { Id = 1 };
+            var entity = new Ship { Id = 1, ClosestSchedule = new Schedule { Arrival = DateTime.Now } };
             var dbEntities = new List<Ship> { entity };
             var dbSet = GetQueryableMockDbSet(dbEntities);
             contextMock.SetupGet(x => x.Ships).Returns(dbSet);

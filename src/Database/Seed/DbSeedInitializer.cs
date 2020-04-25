@@ -84,6 +84,7 @@ namespace Database.Seed
                     });
                     ship.Schedules = schedules;
                 }
+                ship.ClosestSchedule = schedules.OrderBy(x => x.Arrival).First();
             }
         }
     }
