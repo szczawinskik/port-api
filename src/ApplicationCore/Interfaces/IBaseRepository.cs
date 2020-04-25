@@ -10,8 +10,8 @@ namespace ApplicationCore.Interfaces
     {
         IQueryable<T> GetAll();
         T Find(int id);
-        T Add(T entity);
-        T Update(T entity);
+        void Add(T entity);
+        void Update(T entity);
         void Delete(int id);
     }
 }

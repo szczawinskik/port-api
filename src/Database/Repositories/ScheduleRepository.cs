@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using Database.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,10 @@ namespace Database.Repositories
         {
             this.context = context;
         }
-        public Schedule Add(Schedule entity)
+        public void Add(Schedule entity)
         {
             context.Schedules.Add(entity);
             context.SaveChanges();
-
-            return entity;
         }
 
         public void Delete(int id)
@@ -41,11 +40,10 @@ namespace Database.Repositories
             return context.Schedules.First(x => x.Id == id);
         }
 
-        public Schedule Update(Schedule entity)
+        public void Update(Schedule entity)
         {
-            context.Update(entity);
+            context.Entry(entity).State = EntityState.Modified;
             context.SaveChanges();
-            return entity;
         }
     }
 }

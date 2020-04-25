@@ -25,7 +25,7 @@ namespace Infrastructure.Services
                 repository.Add(item);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.LogError(e);
             }
@@ -74,7 +74,16 @@ namespace Infrastructure.Services
 
         public bool Update(Schedule entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                repository.Update(entity);
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return false;
         }
     }
 }

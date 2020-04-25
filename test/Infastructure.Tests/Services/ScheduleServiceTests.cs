@@ -87,7 +87,7 @@ namespace Infastructure.Tests.Services
         }
 
         [Test]
-        public void ShouldReturnFalseAndLogErrorWhenRepositoryFindFails()
+        public void ShouldReturnNullAndLogErrorWhenRepositoryFindFails()
         {
             var idToFind = 1;
             var expectedException = new Exception();
@@ -120,6 +120,30 @@ namespace Infastructure.Tests.Services
             var result = service.GetAll();
 
             Assert.AreEqual(0, result.Count());
+            loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
+        }
+
+        [Test]
+        public void ShouldUpdateEntity()
+        {
+            var entity = new Schedule();
+            repositoryMock.Setup(x => x.Update(entity));
+
+            var result = service.Update(entity);
+
+            repositoryMock.Verify(x => x.Update(entity), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnNullAndLogErrorWhenFetchFails()
+        {
+            var expectedException = new Exception();
+            var entity = new Schedule();
+            repositoryMock.Setup(x => x.Update(entity)).Throws(expectedException);
+
+            var result = service.Update(entity);
+
+            Assert.IsFalse(result);
             loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
         }
     }

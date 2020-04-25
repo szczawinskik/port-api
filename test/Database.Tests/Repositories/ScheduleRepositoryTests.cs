@@ -114,9 +114,8 @@ namespace Database.Tests.Repositories
             contextMock.Setup(x => x.SaveChanges())
               .Callback(() => Assert.That(order++, Is.EqualTo(1)));
 
-            var result = repository.Update(entityUpdate);
+            repository.Update(entityUpdate);
 
-            Assert.AreEqual(entityUpdate, result);
             contextMock.Verify(x => x.Update(entityUpdate), Times.Once());
             contextMock.Verify(x => x.SaveChanges(), Times.Once());
         }
