@@ -40,24 +40,42 @@ namespace Web.Controllers
             return BadRequest(validator.ErrorList);
         }
 
-        public override void Delete(ScheduleViewModel entity)
+        public override IActionResult Delete(int id)
         {
-            throw new NotImplementedException();
+            if(service.Delete(id))
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
-        public override IEnumerable<ScheduleViewModel> GetAll()
+        public override IQueryable<ScheduleViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            return mapper.ProjectTo<ScheduleViewModel>(service.GetAll(), null);
         }
 
-        public override ScheduleViewModel GetById(int id)
+        public override IActionResult GetById(int id)
         {
-            throw new NotImplementedException();
+            var entity = service.Find(id);
+            if (entity != null)
+            {
+                return Ok(mapper.Map<ScheduleViewModel>(entity));
+            }
+            return BadRequest();
         }
 
-        public override void Update(ScheduleViewModel entity)
+        public override IActionResult Update(ScheduleViewModel model)
         {
-            throw new NotImplementedException();
+            if (validator.IsValid(model))
+            {
+                var entity = mapper.Map<Schedule>(model);
+                if (service.Update(entity))
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            return BadRequest(validator.ErrorList);
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Web.Controllers
         public abstract IActionResult Add(T entity);
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public abstract void Update(T entity);
-        [HttpDelete]
+        public abstract IActionResult Update(T entity);
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public abstract void Delete(T entity);
+        public abstract IActionResult Delete(int id);
     }
 }

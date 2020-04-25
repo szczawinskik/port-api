@@ -12,7 +12,9 @@ namespace Web.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     public abstract class GetController<T> : ControllerBase
     {
-        public abstract IEnumerable<T> GetAll();
-        public abstract T GetById(int id);
+        [HttpGet("[action]")]
+        public abstract IQueryable<T> GetAll();
+        [HttpGet("{id}")]
+        public abstract IActionResult GetById(int id);
     }
 }
