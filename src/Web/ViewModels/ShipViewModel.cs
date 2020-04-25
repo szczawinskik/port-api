@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Web.ViewModels
 {
-    public class ScheduleViewModel
+    public class ShipViewModel
     {
         public int Id { get; set; }
-        public DateTime Arrival { get; set; }
-        public DateTime Departure { get; set; }
+        public string Name { get; set; }
     }
 }
