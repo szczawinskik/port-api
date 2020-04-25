@@ -11,14 +11,20 @@ using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    public class ShipController : GetController<ShipViewModel>
+    public class ShipController : GetController<ShipAggregateViewModel>
     {
         private readonly IMapper mapper;
         private readonly IService<Ship> service;
 
-        public override IQueryable<ShipViewModel> GetAll()
+        public ShipController(IService<Ship> service, IMapper mapper)
         {
-            return mapper.ProjectTo<ShipViewModel>(service.GetAll(), null);
+            this.mapper = mapper;
+            this.service = service;
+        }
+
+        public override IQueryable<ShipAggregateViewModel> GetAll()
+        {
+            return mapper.ProjectTo<ShipAggregateViewModel>(service.GetAll(), null);
         }
 
         public override IActionResult GetById(int id)
