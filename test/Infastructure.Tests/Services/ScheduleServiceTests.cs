@@ -14,13 +14,13 @@ namespace Infastructure.Tests.Services
     {
         private ScheduleService service;
         private Mock<IBaseRepository<Schedule>> repositoryMock;
-        private Mock<ILogger<ScheduleService>> loggerMock;
+        private Mock<IApplicationLogger<ScheduleService>> loggerMock;
 
         [SetUp]
         public void Setup()
         {
             repositoryMock = new Mock<IBaseRepository<Schedule>>();
-            loggerMock = new Mock<ILogger<ScheduleService>>();
+            loggerMock = new Mock<IApplicationLogger<ScheduleService>>();
 
             service = new ScheduleService(repositoryMock.Object, loggerMock.Object);
         }

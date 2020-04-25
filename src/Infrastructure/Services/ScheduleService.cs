@@ -10,9 +10,9 @@ namespace Infrastructure.Services
     public class ScheduleService : IService<Schedule>
     {
         private IBaseRepository<Schedule> repository;
-        private ILogger<ScheduleService> logger;
+        private IApplicationLogger<ScheduleService> logger;
 
-        public ScheduleService(IBaseRepository<Schedule> repository, ILogger<ScheduleService> logger)
+        public ScheduleService(IBaseRepository<Schedule> repository, IApplicationLogger<ScheduleService> logger)
         {
             this.repository = repository;
             this.logger = logger;

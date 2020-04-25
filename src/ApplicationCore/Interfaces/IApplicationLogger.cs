@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ApplicationCore.Interfaces
 {
-    public interface ILogger<T>
+    public interface IApplicationLogger<T>
     {
         void LogError(Exception e);
     }
