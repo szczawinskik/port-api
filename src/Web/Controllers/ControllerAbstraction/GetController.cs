@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
-namespace Web.Controllers
+namespace Web.Controllers.ControllerAbstraction
 {
     [ApiController]
     [Consumes(MediaTypeNames.Application.Json)]
