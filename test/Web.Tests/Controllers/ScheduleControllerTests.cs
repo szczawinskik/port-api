@@ -15,6 +15,7 @@ namespace Web.Tests.Controllers
     [TestFixture]
     public class ScheduleControllerTests
     {
+        private int shipId;
         private Mock<IValidator<ScheduleViewModel>> validatorMock;
         private Mock<IService<Schedule>> serviceMock;
         private Mock<IMapper> mapperMock;
@@ -23,6 +24,7 @@ namespace Web.Tests.Controllers
         [SetUp]
         public void Setup()
         {
+            shipId = 1;
             validatorMock = new Mock<IValidator<ScheduleViewModel>>();
             serviceMock = new Mock<IService<Schedule>>();
             mapperMock = new Mock<IMapper>();
@@ -38,7 +40,7 @@ namespace Web.Tests.Controllers
             var errorsList = new List<string>();
             validatorMock.SetupGet(x => x.ErrorList).Returns(errorsList);
 
-            var result = controller.Add(model);
+            var result = controller.Add(model, shipId);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             var badReqest = result as BadRequestObjectResult;
@@ -51,13 +53,13 @@ namespace Web.Tests.Controllers
             var entity = new Schedule();
             validatorMock.Setup(x => x.IsValid(model)).Returns(true);
             mapperMock.Setup(x => x.Map<Schedule>(model)).Returns(entity);
-            serviceMock.Setup(x => x.Add(entity)).Returns(true);
+            serviceMock.Setup(x => x.Add(entity, shipId)).Returns(true);
 
-            var result = controller.Add(model);
+            var result = controller.Add(model, shipId);
 
             Assert.IsInstanceOf<OkResult>(result);
             mapperMock.Verify(x => x.Map<Schedule>(model));
-            serviceMock.Verify(x => x.Add(entity), Times.Once());
+            serviceMock.Verify(x => x.Add(entity, shipId), Times.Once());
         }
 
         [Test]
@@ -67,13 +69,13 @@ namespace Web.Tests.Controllers
             var entity = new Schedule();
             validatorMock.Setup(x => x.IsValid(model)).Returns(true);
             mapperMock.Setup(x => x.Map<Schedule>(model)).Returns(entity);
-            serviceMock.Setup(x => x.Add(entity)).Returns(false);
+            serviceMock.Setup(x => x.Add(entity, shipId)).Returns(false);
 
-            var result = controller.Add(model);
+            var result = controller.Add(model, shipId);
 
             Assert.IsInstanceOf<BadRequestResult>(result);
             mapperMock.Verify(x => x.Map<Schedule>(model));
-            serviceMock.Verify(x => x.Add(entity), Times.Once());
+            serviceMock.Verify(x => x.Add(entity, shipId), Times.Once());
         }
 
         [Test]

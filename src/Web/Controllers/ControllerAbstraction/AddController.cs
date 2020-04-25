@@ -11,6 +11,6 @@ namespace Web.Controllers.ControllerAbstraction
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public abstract IActionResult Add(T entity);
+        public abstract IActionResult Add(T entity, int parentId);
     }
 }

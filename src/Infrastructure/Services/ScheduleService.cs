@@ -18,11 +18,11 @@ namespace Infrastructure.Services
             this.repository = repository;
             this.logger = logger;
         }
-        public bool Add(Schedule item)
+        public bool Add(Schedule item, int shipId)
         {
             try
             {
-                repository.Add(item);
+                repository.Add(item, shipId);
                 return true;
             }
             catch (Exception e)

@@ -14,12 +14,14 @@ namespace Database.Tests.TestDoubles
     [TestFixture]
     public class ScheduleRepositoryTests
     {
+        private int shipId;
         private Mock<ApplicationContext> contextMock;
         private ScheduleRepository repository;
 
         [SetUp]
         public void Setup()
         {
+            shipId = 1;
             contextMock = new Mock<ApplicationContext>();
 
             repository = new ScheduleRepository(contextMock.Object);
@@ -28,17 +30,45 @@ namespace Database.Tests.TestDoubles
         [Test]
         public void ShouldAddScheduleToDatabase()
         {
-            var entity = new Schedule();
+            var entity = new Schedule { Arrival = DateTime.Now.AddMinutes(10) };
             var tempEntities = new List<Schedule>();
             var dbEntities = new List<Schedule>();
+            var ship = new Ship { Id = shipId };
+            var shipEntities = new List<Ship> { ship };
+            var dbSet = GetQueryableMockDbSet(shipEntities);
+            contextMock.SetupGet(x => x.Ships).Returns(dbSet);
             contextMock.Setup(x => x.Schedules.Add(entity))
                 .Callback<Schedule>(x => tempEntities.Add(entity));
             contextMock.Setup(x => x.SaveChanges())
                 .Callback(() => dbEntities.AddRange(tempEntities));
 
-            repository.Add(entity);
+            repository.Add(entity, shipId);
 
             Assert.AreEqual(1, dbEntities.Count);
+            Assert.AreEqual(entity.Ship, ship);
+            Assert.AreEqual(entity.Ship.ClosestSchedule, entity);
+        }
+
+        [Test]
+        public void ShouldUpdateClosestSchedule()
+        {
+            var entity = new Schedule { Arrival = DateTime.Now.AddMinutes(10) };
+            var tempEntities = new List<Schedule>();
+            var dbEntities = new List<Schedule>();
+            var ship = new Ship { Id = shipId, ClosestSchedule = new Schedule { Arrival = DateTime.Now.AddMinutes(20) } };
+            var shipEntities = new List<Ship> { ship };
+            var dbSet = GetQueryableMockDbSet(shipEntities);
+            contextMock.SetupGet(x => x.Ships).Returns(dbSet);
+            contextMock.Setup(x => x.Schedules.Add(entity))
+                .Callback<Schedule>(x => tempEntities.Add(entity));
+            contextMock.Setup(x => x.SaveChanges())
+                .Callback(() => dbEntities.AddRange(tempEntities));
+
+            repository.Add(entity, shipId);
+
+            Assert.AreEqual(1, dbEntities.Count);
+            Assert.AreEqual(entity.Ship, ship);
+            Assert.AreEqual(entity.Ship.ClosestSchedule, entity);
         }
 
         [Test]

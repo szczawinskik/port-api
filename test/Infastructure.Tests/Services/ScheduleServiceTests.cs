@@ -14,12 +14,14 @@ namespace Infastructure.Tests.Services
     public class ScheduleServiceTests
     {
         private ScheduleService service;
+        private int shipId;
         private Mock<IBaseRepository<Schedule>> repositoryMock;
         private Mock<IApplicationLogger<ScheduleService>> loggerMock;
 
         [SetUp]
         public void Setup()
         {
+            shipId = 1;
             repositoryMock = new Mock<IBaseRepository<Schedule>>();
             loggerMock = new Mock<IApplicationLogger<ScheduleService>>();
 
@@ -30,10 +32,10 @@ namespace Infastructure.Tests.Services
         {
             var entity = new Schedule();
 
-            var result = service.Add(entity);
+            var result = service.Add(entity, shipId);
 
             Assert.IsTrue(result);
-            repositoryMock.Verify(x => x.Add(entity), Times.Once());
+            repositoryMock.Verify(x => x.Add(entity, shipId), Times.Once());
         }
 
         [Test]
@@ -41,9 +43,9 @@ namespace Infastructure.Tests.Services
         {
             var entity = new Schedule();
             var expectedException = new Exception();
-            repositoryMock.Setup(x => x.Add(entity)).Throws(expectedException);
+            repositoryMock.Setup(x => x.Add(entity, shipId)).Throws(expectedException);
 
-            var result = service.Add(entity);
+            var result = service.Add(entity, shipId);
 
             Assert.IsFalse(result);
             loggerMock.Verify(x => x.LogError(expectedException), Times.Once());

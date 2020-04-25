@@ -8,7 +8,7 @@ namespace Infrastructure.Interfaces
 {
     public interface IService<T> where T : EntityBase
     {
-        bool Add(T item);
+        bool Add(T item, int parentId);
         IQueryable<T> GetAll();
         bool Delete(int id);
         T Find(int idToFind);

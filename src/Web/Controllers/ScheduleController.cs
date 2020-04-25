@@ -27,12 +27,13 @@ namespace Web.Controllers
             this.validator = validator;
             this.service = service;
         }
-        public override IActionResult Add(ScheduleViewModel model)
+        [HttpPost("{shipId}")]
+        public override IActionResult Add(ScheduleViewModel model, int shipId)
         {
             if (validator.IsValid(model))
             {
                 var entity = mapper.Map<Schedule>(model);
-                if(service.Add(entity))
+                if(service.Add(entity, shipId))
                 {
                     return Ok();
                 }
