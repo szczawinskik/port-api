@@ -42,7 +42,15 @@ namespace Database.Repositories
 
         public void Update(Schedule entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            var existingEntity = context.Schedules.First(x => x.Id == entity.Id);
+            if (existingEntity.Arrival != entity.Arrival)
+            {
+                existingEntity.Arrival = entity.Arrival;
+            }
+            if (existingEntity.Departure != entity.Departure)
+            {
+                existingEntity.Departure = entity.Departure;
+            }
             context.SaveChanges();
         }
     }

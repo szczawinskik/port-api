@@ -2,13 +2,14 @@
 using Database.Context;
 using Database.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Database.Tests.Repositories
+namespace Database.Tests.TestDoubles
 {
     [TestFixture]
     public class ScheduleRepositoryTests
@@ -103,20 +104,26 @@ namespace Database.Tests.Repositories
         [Test]
         public void ShouldUpdateEntity()
         {
-            var order = 0;
-            var entity = new Schedule { Id = 1 };
-            var entityUpdate = new Schedule { Id = 1 };
-            var dbEntities = new List<Schedule> { entity };
+            var entity = new Schedule
+            {
+                Id = 1,
+                Arrival = new DateTime(2020, 10, 10),
+                Departure = new DateTime(2020, 10, 11)
+            };
+            var existingEntity = new Schedule
+            {
+                Id = 1,
+                Arrival = new DateTime(2020, 9, 10),
+                Departure = new DateTime(2020, 9, 11)
+            };
+            var dbEntities = new List<Schedule> { existingEntity };
             var dbSet = GetQueryableMockDbSet(dbEntities);
             contextMock.SetupGet(x => x.Schedules).Returns(dbSet);
-            contextMock.Setup(x => x.Update(entityUpdate))
-                .Callback(() => Assert.That(order++, Is.EqualTo(0)));
-            contextMock.Setup(x => x.SaveChanges())
-              .Callback(() => Assert.That(order++, Is.EqualTo(1)));
 
-            repository.Update(entityUpdate);
+            repository.Update(entity);
 
-            contextMock.Verify(x => x.Update(entityUpdate), Times.Once());
+            Assert.AreEqual(entity.Arrival, existingEntity.Arrival);
+            Assert.AreEqual(entity.Departure, existingEntity.Departure);
             contextMock.Verify(x => x.SaveChanges(), Times.Once());
         }
     }
