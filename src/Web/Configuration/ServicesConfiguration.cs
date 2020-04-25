@@ -14,6 +14,7 @@ namespace Web.Configuration
         public static IServiceCollection ConfigureAppServices(this IServiceCollection collection)
         {
             collection.AddScoped<IService<Schedule>, ScheduleService>();
+            collection.AddScoped<IService<Ship>, ShipService>();
 
             return collection;
         }
