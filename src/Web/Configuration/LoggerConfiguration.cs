@@ -10,11 +10,11 @@ namespace Web.Configuration
 {
     public static class LoggerConfiguration
     {
-        public static IServiceCollection ConfigureLogger(this IServiceCollection collecion)
+        public static IServiceCollection ConfigureLogger(this IServiceCollection collection)
         {
-            collecion.AddScoped(typeof(IApplicationLogger<>), typeof(ApplicationLoger<>));
+            collection.AddScoped(typeof(IApplicationLogger<>), typeof(ApplicationLoger<>));
 
-            return collecion;
+            return collection;
         }
     }
 }

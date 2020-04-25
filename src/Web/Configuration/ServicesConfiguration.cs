@@ -11,11 +11,11 @@ namespace Web.Configuration
 {
     public static class ServicesConfiguration
     {
-        public static IServiceCollection ConfigureAppServices(this IServiceCollection collecion)
+        public static IServiceCollection ConfigureAppServices(this IServiceCollection collection)
         {
-            collecion.AddScoped<IService<Schedule>, ScheduleService>();
+            collection.AddScoped<IService<Schedule>, ScheduleService>();
 
-            return collecion;
+            return collection;
         }
     }
 }

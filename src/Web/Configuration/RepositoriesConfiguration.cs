@@ -11,11 +11,11 @@ namespace Web.Configuration
 {
     public static class RepositoriesConfiguration
     {
-        public static IServiceCollection ConfigureAppServices(this IServiceCollection collecion)
+        public static IServiceCollection ConfigureAppRepositories(this IServiceCollection collection)
         {
-            collecion.AddScoped<IBaseRepository<Schedule>, ScheduleRepository>();
+            collection.AddScoped<IBaseRepository<Schedule>, ScheduleRepository>();
 
-            return collecion;
+            return collection;
         }
     }
 }
