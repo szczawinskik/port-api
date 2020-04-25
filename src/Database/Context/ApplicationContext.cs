@@ -14,5 +14,16 @@ namespace Database.Context
         public virtual DbSet<Ship> Ships { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Ship>()
+                .HasMany(s => s.Schedules)
+                .WithOne(sch => sch.Ship);
+
+            modelBuilder.Entity<Ship>()
+                .HasOne(s => s.ClosestSchedule);
+        }
     }
 }
