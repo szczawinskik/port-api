@@ -24,7 +24,7 @@ namespace Database.Repositories
             return entity;
         }
 
-        public void Delete(Schedule entity)
+        public void Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Schedule GetById(int id)
+        public Schedule Find(int id)
         {
             throw new NotImplementedException();
         }

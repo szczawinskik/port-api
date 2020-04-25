@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Infastructure.Tests.Services
@@ -45,6 +46,80 @@ namespace Infastructure.Tests.Services
             var result = service.Add(entity);
 
             Assert.IsFalse(result);
+            loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
+        }
+
+        [Test]
+        public void ShouldDeleteFromRepositoryAndReturnTrue()
+        {
+            var idToDelete = 1;
+
+            var result = service.Delete(idToDelete);
+
+            Assert.IsTrue(result);
+            repositoryMock.Verify(x => x.Delete(idToDelete), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnFalseAndLogErrorWhenRepositoryDeleteFails()
+        {
+            var idToDelete = 1;
+            var expectedException = new Exception();
+            repositoryMock.Setup(x => x.Delete(idToDelete)).Throws(expectedException);
+
+            var result = service.Delete(idToDelete);
+
+            Assert.IsFalse(result);
+            loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnEntityIfItExists()
+        {
+            var idToFind = 1;
+            var entity = new Schedule();
+            repositoryMock.Setup(x => x.Find(idToFind)).Returns(entity);
+
+            var result = service.Find(idToFind);
+
+            Assert.AreEqual(entity, result);
+            repositoryMock.Verify(x => x.Find(idToFind), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnFalseAndLogErrorWhenRepositoryFindFails()
+        {
+            var idToFind = 1;
+            var expectedException = new Exception();
+            repositoryMock.Setup(x => x.Find(idToFind)).Throws(expectedException);
+
+            var result = service.Find(idToFind);
+
+            Assert.IsNull(result);
+            loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnAllEntities()
+        {
+            var entityList = new List<Schedule>().AsQueryable();
+            repositoryMock.Setup(x => x.GetAll()).Returns(entityList);
+
+            var result = service.GetAll();
+
+            Assert.AreEqual(entityList, result);
+            repositoryMock.Verify(x => x.GetAll(), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnEmptyListAndLogErrorWhenFetchFails()
+        {
+            var expectedException = new Exception();
+            repositoryMock.Setup(x => x.GetAll()).Throws(expectedException);
+
+            var result = service.GetAll();
+
+            Assert.AreEqual(0, result.Count());
             loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
         }
     }

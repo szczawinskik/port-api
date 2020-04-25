@@ -9,9 +9,9 @@ namespace ApplicationCore.Interfaces
     public interface IBaseRepository<T> where T : EntityBase
     {
         IQueryable<T> GetAll();
-        T GetById(int id);
+        T Find(int id);
         T Add(T entity);
         T Update(T entity);
-        void Delete(T entity);
+        void Delete(int id);
     }
 }

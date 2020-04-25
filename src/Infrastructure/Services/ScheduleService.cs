@@ -34,17 +34,42 @@ namespace Infrastructure.Services
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                repository.Delete(id);
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return false;
         }
 
-        public Schedule Find(int idToFind)
+        public Schedule Find(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return repository.Find(id);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return null;
         }
 
         public IQueryable<Schedule> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return repository.GetAll();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return new List<Schedule>().AsQueryable();
         }
 
         public bool Update(Schedule entity)
