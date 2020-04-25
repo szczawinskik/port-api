@@ -26,22 +26,26 @@ namespace Database.Repositories
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var schedule = context.Schedules.First(x => x.Id == id);
+            context.Remove(schedule);
+            context.SaveChanges();
         }
 
         public IQueryable<Schedule> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Schedules;
         }
 
         public Schedule Find(int id)
         {
-            throw new NotImplementedException();
+            return context.Schedules.First(x => x.Id == id);
         }
 
         public Schedule Update(Schedule entity)
         {
-            throw new NotImplementedException();
+            context.Update(entity);
+            context.SaveChanges();
+            return entity;
         }
     }
 }
