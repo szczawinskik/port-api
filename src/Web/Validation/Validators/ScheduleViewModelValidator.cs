@@ -10,7 +10,7 @@ namespace Web.Validation.Validators
 {
     public class ScheduleViewModelValidator : IValidator<ScheduleViewModel>
     {
-        public ICollection<string> ErrorList { get; private set; }
+        public List<string> ErrorList { get; private set; }
 
         public bool IsValid(ScheduleViewModel item)
         {

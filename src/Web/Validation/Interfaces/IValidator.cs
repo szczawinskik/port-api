@@ -7,7 +7,7 @@ namespace Web.Validation.Interfaces
 {
     public interface IValidator<T>
     {
-        public ICollection<string> ErrorList { get; }
+        public List<string> ErrorList { get; }
         public bool IsValid(T item);
     }
 }
