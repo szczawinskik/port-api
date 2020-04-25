@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Web.Configuration;
 
 namespace Web
 {
@@ -34,6 +35,9 @@ namespace Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Port API", Version = "v1" });
             });
+
+            services.ConfigureAppServices();
+            services.ConfigureLogger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
