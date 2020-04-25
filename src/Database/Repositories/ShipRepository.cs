@@ -17,10 +17,22 @@ namespace Database.Repositories
         {
             this.context = context;
         }
-        public void Add(Schedule entity)
+        public void Add(Schedule entity, int shipId)
         {
+            var ship = context.Ships.First(x => x.Id == shipId);
+            entity.Ship = ship;
+            if (ShouldUpdateClosesSchedule(entity, ship))
+            {
+                ship.ClosestSchedule = entity;
+            }
             context.Schedules.Add(entity);
             context.SaveChanges();
+        }
+
+        private static bool ShouldUpdateClosesSchedule(Schedule entity, Ship ship)
+        {
+            return DateTime.Now < entity.Arrival
+                            && (ship.ClosestSchedule == null || ship.ClosestSchedule.Arrival > entity.Arrival);
         }
 
         public void Delete(int id)

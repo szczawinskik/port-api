@@ -19,9 +19,18 @@ namespace Infrastructure.Services
             this.logger = logger;
         }
 
-        public bool Add(Ship item)
+        public bool Add(Ship item, int shipOwnerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                repository.Add(item, shipOwnerId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return false;
         }
 
         public bool Delete(int id)

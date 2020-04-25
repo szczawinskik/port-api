@@ -14,12 +14,14 @@ namespace Infastructure.Tests.Services
     public class ShipServiceTests
     {
         private ShipService service;
+        private int shipOwnerId;
         private Mock<IBaseRepository<Ship>> repositoryMock;
         private Mock<IApplicationLogger<ShipService>> loggerMock;
 
         [SetUp]
         public void Setup()
         {
+            shipOwnerId = 1;
             repositoryMock = new Mock<IBaseRepository<Ship>>();
             loggerMock = new Mock<IApplicationLogger<ShipService>>();
 
@@ -62,6 +64,30 @@ namespace Infastructure.Tests.Services
 
             Assert.AreEqual(entityList, result);
             repositoryMock.Verify(x => x.GetAll(), Times.Once());
+        }
+
+        [Test]
+        public void ShouldAddToRepositoryAndReturnTrue()
+        {
+            var entity = new Ship();
+
+            var result = service.Add(entity, shipOwnerId);
+
+            Assert.IsTrue(result);
+            repositoryMock.Verify(x => x.Add(entity, shipOwnerId), Times.Once());
+        }
+
+        [Test]
+        public void ShouldReturnFalseAndLogErrorWhenRepositoryAddFails()
+        {
+            var entity = new Ship();
+            var expectedException = new Exception();
+            repositoryMock.Setup(x => x.Add(entity, shipOwnerId)).Throws(expectedException);
+
+            var result = service.Add(entity, shipOwnerId);
+
+            Assert.IsFalse(result);
+            loggerMock.Verify(x => x.LogError(expectedException), Times.Once());
         }
     }
 }

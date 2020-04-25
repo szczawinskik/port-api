@@ -18,10 +18,11 @@ namespace Web.Validation.Validators
 
         public bool IsValid(ShipViewModel item)
         {
+            var valid = true;
             ErrorList = new List<string>();
             foreach (var schedule in item.Schedules)
             {
-               scheduleValidator.IsValid(schedule);
+                valid = scheduleValidator.IsValid(schedule) || valid;
             }
             scheduleValidator.IsValid(item.ClosestSchedule);
             ErrorList.AddRange(scheduleValidator.ErrorList);

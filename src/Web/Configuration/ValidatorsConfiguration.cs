@@ -17,6 +17,7 @@ namespace Web.Configuration
         public static IServiceCollection ConfigureValidators(this IServiceCollection collection)
         {
             collection.AddScoped<IValidator<ScheduleViewModel>, ScheduleViewModelValidator>();
+            collection.AddScoped<IValidator<ShipViewModel>, ShipViewModelValidator>();
 
             return collection;
         }

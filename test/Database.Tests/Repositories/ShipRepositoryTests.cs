@@ -14,32 +14,39 @@ namespace Database.Tests.TestDoubles
     [TestFixture]
     public class ShipRepositoryTests
     {
+        private int shipOwnerId;
         private Mock<ApplicationContext> contextMock;
         private ShipRepository repository;
 
         [SetUp]
         public void Setup()
         {
+            shipOwnerId = 1;
             contextMock = new Mock<ApplicationContext>();
 
             repository = new ShipRepository(contextMock.Object);
         }
 
-        //[Test]
-        //public void ShouldAddShipToDatabase()
-        //{
-        //    var entity = new Ship();
-        //    var tempEntities = new List<Ship>();
-        //    var dbEntities = new List<Ship>();
-        //    contextMock.Setup(x => x.Ships.Add(entity))
-        //        .Callback<Ship>(x => tempEntities.Add(entity));
-        //    contextMock.Setup(x => x.SaveChanges())
-        //        .Callback(() => dbEntities.AddRange(tempEntities));
+        [Test]
+        public void ShouldAddShipToDatabase()
+        {
+            var entity = new Ship { };
+            var tempEntities = new List<Ship>();
+            var dbEntities = new List<Ship>();
+            var shipOwner = new ShipOwner { Id = shipOwnerId };
+            var shipOwnerEntities = new List<ShipOwner> { shipOwner };
+            var dbSet = GetQueryableMockDbSet(shipOwnerEntities);
+            contextMock.SetupGet(x => x.ShipOwners).Returns(dbSet);
+            contextMock.Setup(x => x.Ships.Add(entity))
+                .Callback<Ship>(x => tempEntities.Add(entity));
+            contextMock.Setup(x => x.SaveChanges())
+                .Callback(() => dbEntities.AddRange(tempEntities));
 
-        //    repository.Add(entity);
+            repository.Add(entity, shipOwnerId);
 
-        //    Assert.AreEqual(1, dbEntities.Count);
-        //}
+            Assert.AreEqual(1, dbEntities.Count);
+            Assert.AreEqual(entity.ShipOwner, shipOwner);
+        }
 
         private static DbSet<T> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class
         {
