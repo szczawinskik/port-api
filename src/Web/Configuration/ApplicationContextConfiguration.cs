@@ -10,14 +10,14 @@ namespace Web.Configuration
 {
     public static class ApplicationContextConfiguration
     {
-        public static IServiceCollection ConfigureAppServices(this IServiceCollection collecion)
+        public static IServiceCollection ConfigureAppContext(this IServiceCollection collection)
         {
-            collecion.AddDbContext<ApplicationContext>(opt =>
+            collection.AddDbContext<ApplicationContext>(opt =>
             {
                 opt.UseInMemoryDatabase("test_db");
             });
 
-            return collecion;
+            return collection;
         }
     }
 }

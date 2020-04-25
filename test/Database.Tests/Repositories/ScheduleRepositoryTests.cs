@@ -12,13 +12,13 @@ namespace Database.Tests.Repositories
     [TestFixture]
     public class ScheduleRepositoryTests
     {
-        private Mock<IApplicationContext> contextMock;
+        private Mock<ApplicationContext> contextMock;
         private ScheduleRepository repository;
 
         [SetUp]
         public void Setup()
         {
-            contextMock = new Mock<IApplicationContext>();
+            contextMock = new Mock<ApplicationContext>();
 
             repository = new ScheduleRepository(contextMock.Object);
         }

@@ -38,6 +38,8 @@ namespace Web
 
             services.ConfigureAppServices();
             services.ConfigureLogger();
+            services.ConfigureAppContext();
+            services.ConfigureAppRepositories();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

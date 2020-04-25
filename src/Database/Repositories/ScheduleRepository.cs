@@ -10,9 +10,9 @@ namespace Database.Repositories
 {
     public class ScheduleRepository : IBaseRepository<Schedule>
     {
-        private IApplicationContext context;
+        private ApplicationContext context;
 
-        public ScheduleRepository(IApplicationContext context)
+        public ScheduleRepository(ApplicationContext context)
         {
             this.context = context;
         }
