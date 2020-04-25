@@ -10,10 +10,10 @@ namespace Web.Controllers.ControllerAbstraction
     [ApiController]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
-    public abstract class GetController<T> : ControllerBase
+    public abstract class GetController<TResultType> : ControllerBase
     {
         [HttpGet("[action]")]
-        public abstract IQueryable<T> GetAll();
+        public abstract IQueryable<TResultType> GetAll();
         [HttpGet("{id}")]
         public abstract IActionResult GetById(int id);
     }

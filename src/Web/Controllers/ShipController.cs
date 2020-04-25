@@ -7,19 +7,37 @@ using AutoMapper;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Controllers.ControllerAbstraction;
+using Web.Validation.Interfaces;
 using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    public class ShipController : GetController<ShipAggregateViewModel>
+    public class ShipController : AddController<ShipAggregateViewModel, ShipViewModel>
     {
         private readonly IMapper mapper;
         private readonly IService<Ship> service;
+        private readonly IValidator<ShipViewModel> validator;
 
-        public ShipController(IService<Ship> service, IMapper mapper)
+        public ShipController(IService<Ship> service, IMapper mapper, IValidator<ShipViewModel> validator)
         {
             this.mapper = mapper;
             this.service = service;
+            this.validator = validator;
+        }
+
+        [HttpPost("{shipOwnerId}")]
+        public override IActionResult Add(ShipViewModel model, int shipOwnerId)
+        {
+            if (validator.IsValid(model))
+            {
+                var entity = mapper.Map<Ship>(model);
+                if (service.Add(entity, shipOwnerId))
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            return BadRequest(validator.ErrorList);
         }
 
         public override IQueryable<ShipAggregateViewModel> GetAll()

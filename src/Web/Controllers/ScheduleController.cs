@@ -14,7 +14,7 @@ namespace Web.Controllers
 {
 
     [Route("[controller]")]
-    public class ScheduleController : AppController<ScheduleViewModel>
+    public class ScheduleController : AppController<ScheduleViewModel, ScheduleViewModel>
     {
         private readonly IMapper mapper;
         private readonly IValidator<ScheduleViewModel> validator;

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Web.Controllers.ControllerAbstraction
 {
-    public abstract class AddController<T>: GetController<T>
+    public abstract class AddController<TResultType, TAddType>: GetController<TResultType>
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public abstract IActionResult Add(T entity, int parentId);
+        public abstract IActionResult Add(TAddType entity, int parentId);
     }
 }
