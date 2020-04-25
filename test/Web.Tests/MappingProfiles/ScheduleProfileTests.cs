@@ -40,7 +40,6 @@ namespace Web.Tests.MappingProfiles
                 Arrival = new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local),
                 Departure = new DateTime(2020, 6, 7, 8, 9, 10, DateTimeKind.Local),
                 Id = 1,
-                Name = "test"
             };
             var expectedArrivalDate = new DateTime(model.Arrival.Year, model.Arrival.Month, model.Arrival.Day,
                     model.Arrival.Hour, model.Arrival.Minute, 0, DateTimeKind.Local);
@@ -50,7 +49,6 @@ namespace Web.Tests.MappingProfiles
             var result = mapper.Map<Schedule>(model);
 
             Assert.AreEqual(model.Id, result.Id);
-            Assert.AreEqual(model.Name, result.Name);
             Assert.AreEqual(expectedArrivalDate, result.Arrival);
             Assert.AreEqual(expectedDepartureDate, result.Departure);
         }
@@ -63,13 +61,11 @@ namespace Web.Tests.MappingProfiles
                 Arrival = new DateTime(2020, 1, 2, 3, 4, 0, DateTimeKind.Local),
                 Departure = new DateTime(2020, 6, 7, 8, 9, 0, DateTimeKind.Local),
                 Id = 1,
-                Name = "test"
             };
 
             var result = mapper.Map<ScheduleViewModel>(entity);
 
             Assert.AreEqual(entity.Id, result.Id);
-            Assert.AreEqual(entity.Name, result.Name);
             Assert.AreEqual(entity.Arrival, result.Arrival);
             Assert.AreEqual(entity.Departure, result.Departure);
         }
