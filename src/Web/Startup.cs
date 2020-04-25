@@ -49,6 +49,7 @@ namespace Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.SeedDatabase();
             }
 
             app.UseSwagger();
