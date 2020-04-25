@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace Web.ViewModels
 {
-    public class ShipAggregateViewModel : ShipViewModel
+    public class ShipAggregateViewModel
     {
-       public List<ScheduleViewModel> Schedules { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShipOwnerName { get; set; }
+        public ScheduleViewModel ClosestSchedule { get; set; }
     }
 }

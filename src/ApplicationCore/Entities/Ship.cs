@@ -8,6 +8,7 @@ namespace ApplicationCore.Entities
     {
         public string Name { get; set; }
         public virtual IEnumerable<Schedule> Schedules { get; set; }
-        public ShipOwner ShipOwner { get; set; }
+        public virtual ShipOwner ShipOwner { get; set; }
+        public virtual Schedule ClosestSchedule { get; set; }
     }
 }

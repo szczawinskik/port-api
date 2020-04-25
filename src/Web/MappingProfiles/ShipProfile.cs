@@ -12,11 +12,22 @@ namespace Web.MappingProfiles
     {
         public ShipProfile()
         {
-            CreateMap<ShipViewModel, Ship>()
-                .ForMember(x => x.ShipOwner, opt => opt.Ignore())
-                .ForMember(x => x.Schedules, opt => opt.Ignore());
 
-            CreateMap<Ship, ShipViewModel>();
+            CreateMap<Ship, ShipAggregateViewModel>()
+                .ForMember(x => x.ShipOwnerName, opt => opt.MapFrom(x => x.ShipOwner.Name))
+                .ForMember(x => x.ClosestSchedule, opt => opt.MapFrom(x => x.ClosestSchedule));
+
+            CreateMap<Ship, ShipViewModel>()
+                .IncludeBase<Ship, ShipAggregateViewModel>()
+                .ForMember(x => x.Schedules, opt => opt.MapFrom(x => x.Schedules));
+
+            CreateMap<ShipViewModel, Ship>()
+               .ForMember(x => x.ShipOwner, opt => opt.Ignore())
+               .ForMember(x => x.Schedules, opt => opt.MapFrom(x => x.Schedules));
+
+            //CreateMap<ShipViewModel, Ship>()
+            //   .ForMember(x => x.ShipOwner, opt => opt.Ignore())
+            //   .ForMember(x => x.Schedules, opt => opt.MapFrom(x => x.Schedules));
         }
     }
 }
