@@ -41,7 +41,7 @@ namespace Infrastructure.Services
 
         private void SetClosestSchedule(Ship ship)
         {
-            if (ship.Schedules.Any())
+            if (ship.Schedules != null && ship.Schedules.Any())
             {
                 var now = DateTime.Now;
                 if (ship.ClosestSchedule == null)
