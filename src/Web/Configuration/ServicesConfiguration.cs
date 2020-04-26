@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.BackgroundServices;
 
 namespace Web.Configuration
 {
@@ -16,6 +17,10 @@ namespace Web.Configuration
             collection.AddScoped<IService<Schedule>, ScheduleService>();
             collection.AddScoped<IService<Ship>, ShipService>();
             collection.AddScoped<IConfigurationService, ConfigurationService>();
+            collection.AddScoped<ISenderService, SenderService>();
+
+            collection.AddSingleton<DelayBackgroundServices>();
+            collection.AddHostedService<RestBackgroundService>();
 
             return collection;
         }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Web.BackgroundServices;
 using Web.Configuration;
 
 namespace Web
@@ -45,6 +46,7 @@ namespace Web
             services.ConfigureLogger();
             services.ConfigureAppRepositories();
             services.ConfigureValidators();
+            services.ConfigureWrappers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,13 +56,18 @@ namespace Web
             {
                 app.UseDeveloperExceptionPage();
                 app.SeedDatabase();
-            } else
+            }
+            else
             {
                 using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationContext>();
                     context.Database.EnsureCreated();
                 }
+            }
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<DelayBackgroundServices>().Start();
             }
 
             app.UseSwagger();
