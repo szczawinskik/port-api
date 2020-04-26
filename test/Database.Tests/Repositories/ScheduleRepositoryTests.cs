@@ -14,14 +14,12 @@ namespace Database.Tests.Repositories
     [TestFixture]
     public class ScheduleRepositoryTests
     {
-        private int shipId;
         private Mock<ApplicationContext> contextMock;
         private ScheduleRepository repository;
 
         [SetUp]
         public void Setup()
         {
-            shipId = 1;
             contextMock = new Mock<ApplicationContext>();
 
             repository = new ScheduleRepository(contextMock.Object);
