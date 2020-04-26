@@ -62,6 +62,10 @@ namespace Infastructure.Tests.Services
         public void ShouldDeleteFromRepositoryAndReturnTrue()
         {
             var idToDelete = 1;
+            var entity = new Schedule { Id = idToDelete, ShipId = shipId };
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(new Ship { Schedules = new List<Schedule>()});
+            repositoryMock.Setup(x => x.Find(idToDelete)).Returns(entity);
+            repositoryMock.Setup(x => x.Update(entity));
 
             var result = service.Delete(idToDelete);
 
@@ -73,6 +77,10 @@ namespace Infastructure.Tests.Services
         public void ShouldReturnFalseAndLogErrorWhenRepositoryDeleteFails()
         {
             var idToDelete = 1;
+            var entity = new Schedule { Id = idToDelete, ShipId = shipId };
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(new Ship { Schedules = new List<Schedule>() });
+            repositoryMock.Setup(x => x.Find(idToDelete)).Returns(entity);
+            repositoryMock.Setup(x => x.Update(entity));
             var expectedException = new Exception();
             repositoryMock.Setup(x => x.Delete(idToDelete)).Throws(expectedException);
 
