@@ -35,12 +35,13 @@ namespace Web.BackgroundServices
                         InitializeScope(scope.ServiceProvider);
                         senderService.FetchAddress();
                         await SendOldNotSentSchedules();
-                        await Task.Delay(1000 * 60, stoppingToken);
+                        var secondsToNextMinute = 60 - DateTime.Now.Second;
+                        await Task.Delay(1000 * secondsToNextMinute, stoppingToken);
                     }
                 }
                 else
                 {
-                    await Task.Delay(1000 * 10, stoppingToken);
+                    await Task.Delay(1000 * 5, stoppingToken);
                 }
 
             }
