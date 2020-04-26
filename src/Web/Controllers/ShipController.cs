@@ -12,6 +12,7 @@ using Web.ViewModels;
 
 namespace Web.Controllers
 {
+    [Route("api/[controller]")]
     public class ShipController : AddController<ShipAggregateViewModel, ShipViewModel>
     {
         private readonly IMapper mapper;

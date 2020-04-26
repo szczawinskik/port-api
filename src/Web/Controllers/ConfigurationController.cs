@@ -14,6 +14,7 @@ namespace Web.Controllers
     [ApiController]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
+    [Route("api/[controller]")]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfigurationService configurationService;

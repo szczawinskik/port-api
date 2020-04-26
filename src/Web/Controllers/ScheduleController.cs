@@ -13,7 +13,7 @@ using Web.ViewModels;
 namespace Web.Controllers
 {
 
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ScheduleController : AppController<ScheduleViewModel, ScheduleViewModel>
     {
         private readonly IMapper mapper;
