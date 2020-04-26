@@ -13,20 +13,22 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class SenderService: ISenderService
+    public class SenderService : ISenderService
     {
         private readonly IScheduleRepository scheduleRepository;
         private readonly IHttpClientWrapper httpClient;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly IService<Schedule> scheduleService;
         private readonly IApplicationLogger<SenderService> logger;
         private string remoteAddress = string.Empty;
 
         public SenderService(IScheduleRepository scheduleRepository, IConfigurationRepository configurationRepository,
-            IHttpClientWrapper httpClient)
+            IService<Schedule> scheduleService, IHttpClientWrapper httpClient)
         {
             this.scheduleRepository = scheduleRepository;
             this.httpClient = httpClient;
             this.configurationRepository = configurationRepository;
+            this.scheduleService = scheduleService;
         }
 
         public void FetchAddress()
@@ -47,6 +49,7 @@ namespace Infrastructure.Services
             {
                 Name = schedule.Ship.Name
             };
+            schedule.ArrivalSent = true;
             await SendMessage(schedule, message);
         }
 
@@ -56,17 +59,17 @@ namespace Infrastructure.Services
             {
                 Name = schedule.Ship.Name
             };
+            schedule.DepartureSent = true;
             await SendMessage(schedule, message);
         }
 
-        private async Task SendMessage(Schedule schedule, MessageBase message)
+        private async Task SendMessage(Schedule schedule, MessageBase message, bool isArrival = true)
         {
             var response = await httpClient.PostMessage(remoteAddress, message);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                schedule.DepartureSent = true;
-                scheduleRepository.Update(schedule);
+                scheduleService.Update(schedule);
             }
         }
     }

@@ -57,6 +57,9 @@ namespace Infrastructure.Services
         {
             try
             {
+                var schedule = repository.Find(id);
+                var ship = shipRepository.Find(schedule.ShipId);
+                ChangeClosestSchedule(ship, schedule.Id);
                 repository.Delete(id);
                 return true;
             }
@@ -125,8 +128,9 @@ namespace Infrastructure.Services
             {
                 return;
             }
-            if(ship.Schedules.Any(x => (x.Arrival <= schedule.Arrival && schedule.Arrival < x.Departure)
-                ||(x.Arrival >= schedule.Arrival && schedule.Arrival > x.Departure)))
+            if(ship.Schedules.Any(x => x.Id != schedule.Id 
+                &&((x.Arrival <= schedule.Arrival && schedule.Arrival < x.Departure)
+                    ||(x.Arrival >= schedule.Arrival && schedule.Arrival > x.Departure))))
             {
                 throw new Exception("Schedules are interlocking");
             }
@@ -134,7 +138,7 @@ namespace Infrastructure.Services
         private void ChangeClosestSchedule(Ship ship, int scheduleId)
         {
             var closestSchedule = ship.Schedules
-                .Where(x => x.Id != scheduleId)
+                .Where(x => x.Id != scheduleId && x.DepartureSent == false)
                 .OrderBy(x => x.Arrival)
                 .FirstOrDefault();
             ship.ClosestSchedule = closestSchedule;
