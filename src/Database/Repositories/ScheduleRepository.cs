@@ -9,41 +9,49 @@ using System.Text;
 
 namespace Database.Repositories
 {
-    public class ShipRepository : IBaseRepository<Ship>
+    public class ScheduleRepository : IBaseRepository<Schedule>
     {
-        private ApplicationContext context;
+        private readonly ApplicationContext context;
 
-        public ShipRepository(ApplicationContext context)
+        public ScheduleRepository(ApplicationContext context)
         {
             this.context = context;
         }
-        public void Add(Ship entity)
-        {
-            context.Ships.Add(entity);
+        public void Add(Schedule entity)
+        {                   
+            context.Schedules.Add(entity);
             context.SaveChanges();
-        }
-
-        public IQueryable<Ship> GetAll()
-        {
-            return context.Ships;
-        }
-
-        public Ship Find(int id)
-        {
-            return context.Ships
-                .Include(x => x.Schedules)
-                .Include(x => x.ShipOwner)
-                .First(x => x.Id == id);
-        }
-
-        public void Update(Ship entity)
-        {
-            throw new NotImplementedException();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var schedule = context.Schedules.First(x => x.Id == id);
+            context.Remove(schedule);
+            context.SaveChanges();
+        }
+
+        public IQueryable<Schedule> GetAll()
+        {
+            return context.Schedules;
+        }
+
+        public Schedule Find(int id)
+        {
+            return context.Schedules.First(x => x.Id == id);
+        }
+
+        public void Update(Schedule entity)
+        {
+            var existingEntity = context.Schedules.First(x => x.Id == entity.Id);
+            if (existingEntity.Arrival != entity.Arrival)
+            {
+                existingEntity.Arrival = entity.Arrival;
+            }
+            if (existingEntity.Departure != entity.Departure)
+            {
+                existingEntity.Departure = entity.Departure;
+            }
+            context.SaveChanges();
         }
     }
 }
