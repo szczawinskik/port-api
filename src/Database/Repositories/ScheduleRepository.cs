@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Database.Repositories
 {
-    public class ScheduleRepository : IBaseRepository<Schedule>
+    public class ScheduleRepository : IScheduleRepository
     {
         private readonly ApplicationContext context;
 
@@ -51,7 +51,20 @@ namespace Database.Repositories
             {
                 existingEntity.Departure = entity.Departure;
             }
+            if (!existingEntity.ArrivalSent && entity.ArrivalSent)
+            {
+                existingEntity.ArrivalSent = true;
+            }
+            if (!existingEntity.DepartureSent && entity.DepartureSent)
+            {
+                existingEntity.DepartureSent = true;
+            }
             context.SaveChanges();
+        }
+
+        public IQueryable<Schedule> GetAllWithShips()
+        {
+            return GetAll().Include(x => x.Ship);
         }
     }
 }

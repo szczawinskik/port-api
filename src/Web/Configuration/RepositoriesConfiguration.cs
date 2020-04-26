@@ -13,7 +13,7 @@ namespace Web.Configuration
     {
         public static IServiceCollection ConfigureAppRepositories(this IServiceCollection collection)
         {
-            collection.AddScoped<IBaseRepository<Schedule>, ScheduleRepository>();
+            collection.AddScoped<IScheduleRepository, ScheduleRepository>();
             collection.AddScoped<IBaseRepository<Ship>, ShipRepository>();
             collection.AddScoped<IFindRepository<ShipOwner>, ShipOwnerRepository>();
             collection.AddScoped<IConfigurationRepository, ConfigurationRepository>();

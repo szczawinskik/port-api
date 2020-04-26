@@ -10,11 +10,11 @@ namespace Infrastructure.Services
 {
     public class ScheduleService : IService<Schedule>
     {
-        private readonly IBaseRepository<Schedule> repository;
+        private readonly IScheduleRepository repository;
         private readonly IBaseRepository<Ship> shipRepository;
         private readonly IApplicationLogger<ScheduleService> logger;
 
-        public ScheduleService(IBaseRepository<Schedule> repository, IBaseRepository<Ship> shipRepository,
+        public ScheduleService(IScheduleRepository repository, IBaseRepository<Ship> shipRepository,
             IApplicationLogger<ScheduleService> logger)
         {
             this.repository = repository;
@@ -26,10 +26,8 @@ namespace Infrastructure.Services
             try
             {
                 var ship = shipRepository.Find(shipId);
-                if(ShouldUpdateClosesSchedule(schedule, ship))
-                {
-                    ship.ClosestSchedule = schedule;
-                }
+                ValidateSchedules(schedule, ship);
+                UpdateClosestSchedule(schedule, ship);
                 schedule.Ship = ship;
                 repository.Add(schedule);
                 return true;
@@ -39,6 +37,14 @@ namespace Infrastructure.Services
                 logger.LogError(e);
             }
             return false;
+        }
+
+        private void UpdateClosestSchedule(Schedule schedule, Ship ship)
+        {
+            if (ShouldUpdateClosesSchedule(schedule, ship))
+            {
+                ship.ClosestSchedule = schedule;
+            }
         }
 
         private bool ShouldUpdateClosesSchedule(Schedule entity, Ship ship)
@@ -91,7 +97,19 @@ namespace Infrastructure.Services
         {
             try
             {
+                var schedule = repository.Find(entity.Id);
+                var ship = shipRepository.Find(schedule.ShipId);
+                ValidateSchedules(schedule, ship);
+                if (entity.ArrivalSent && entity.DepartureSent)
+                {
+                    ChangeClosestSchedule(ship, schedule.Id);
+                }
+                else
+                {
+                    UpdateClosestSchedule(entity, schedule.Ship);
+                }
                 repository.Update(entity);
+
                 return true;
             }
             catch (Exception e)
@@ -99,6 +117,23 @@ namespace Infrastructure.Services
                 logger.LogError(e);
             }
             return false;
+        }
+
+        private void ValidateSchedules(Schedule schedule, Ship ship)
+        {
+            if(ship.Schedules.Any(x => (x.Arrival <= schedule.Arrival && schedule.Arrival < x.Departure)
+                ||(x.Arrival >= schedule.Arrival && schedule.Arrival > x.Departure)))
+            {
+                throw new Exception("Schedules are interlocking");
+            }
+        }
+        private void ChangeClosestSchedule(Ship ship, int scheduleId)
+        {
+            var closestSchedule = ship.Schedules
+                .Where(x => x.Id != scheduleId)
+                .OrderBy(x => x.Arrival)
+                .FirstOrDefault();
+            ship.ClosestSchedule = closestSchedule;
         }
     }
 }
