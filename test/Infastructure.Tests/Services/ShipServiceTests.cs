@@ -29,7 +29,7 @@ namespace Infastructure.Tests.Services
 
             service = new ShipService(repositoryMock.Object, shipOwnerRepositoryMock.Object, loggerMock.Object);
         }
-     
+
         [Test]
         public void ShouldReturnEntityIfItExists()
         {
@@ -81,6 +81,54 @@ namespace Infastructure.Tests.Services
             Assert.AreEqual(shipOwner, entity.ShipOwner);
             repositoryMock.Verify(x => x.Add(entity), Times.Once());
             shipOwnerRepositoryMock.Verify(x => x.Find(shipOwnerId), Times.Once());
+        }
+
+        [Test]
+        public void ShouldNotSetClosestScheduleWhenItIsNotInFuture()
+        {
+            var shipOwner = new ShipOwner();
+            shipOwnerRepositoryMock.Setup(x => x.Find(shipOwnerId)).Returns(shipOwner);
+            var entity = new Ship
+            {
+                Schedules = new List<Schedule> { new Schedule() }
+            };
+
+            var result = service.Add(entity, shipOwnerId);
+
+            Assert.AreEqual(null, entity.ClosestSchedule);
+        }
+
+        [Test]
+        public void ShouldSetClosestScheduleWhenItIsInFuture()
+        {
+            var shipOwner = new ShipOwner();
+            shipOwnerRepositoryMock.Setup(x => x.Find(shipOwnerId)).Returns(shipOwner);
+            var entity = new Ship
+            {
+                Schedules = new List<Schedule> { new Schedule { Arrival = DateTime.Now.AddDays(1) } }
+            };
+
+            var result = service.Add(entity, shipOwnerId);
+
+            Assert.AreEqual(entity.Schedules.ElementAt(0), entity.ClosestSchedule);
+        }
+
+        [Test]
+        public void ShouldSetClosestScheduleFromSchedulesList()
+        {
+            var shipOwner = new ShipOwner();
+            shipOwnerRepositoryMock.Setup(x => x.Find(shipOwnerId)).Returns(shipOwner);
+            var now = DateTime.Now.AddDays(1);
+
+            var entity = new Ship
+            {
+                Schedules = new List<Schedule> { new Schedule { Arrival = now, Departure = now.AddDays(1) } },
+                ClosestSchedule = new Schedule { Arrival = now, Departure = now.AddDays(1) }
+            };
+
+            var result = service.Add(entity, shipOwnerId);
+
+            Assert.AreEqual(entity.Schedules.ElementAt(0), entity.ClosestSchedule);
         }
 
         [Test]

@@ -26,6 +26,7 @@ namespace Infrastructure.Services
         {
             try
             {
+                SetClosestSchedule(ship);
                 var shipOwner = shipOwnerRepository.Find(shipOwnerId);
                 ship.ShipOwner = shipOwner;
                 repository.Add(ship);
@@ -36,6 +37,28 @@ namespace Infrastructure.Services
                 logger.LogError(e);
             }
             return false;
+        }
+
+        private void SetClosestSchedule(Ship ship)
+        {
+            if (ship.Schedules.Any())
+            {
+                var now = DateTime.Now;
+                if (ship.ClosestSchedule == null)
+                {
+                    ship.ClosestSchedule = ship.Schedules
+                        .Where(x => x.Arrival >= now)
+                        .OrderBy(x => x.Arrival)
+                        .FirstOrDefault();
+                }
+                else
+                {
+                    ship.ClosestSchedule =
+                        ship.Schedules.First(x => x.Arrival == ship.ClosestSchedule.Arrival
+                        && x.Departure == ship.ClosestSchedule.Departure);
+                }
+            }
+          
         }
 
         public bool Delete(int id)
