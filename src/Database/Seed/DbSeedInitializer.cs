@@ -11,11 +11,11 @@ namespace Database.Seed
     {
         public static void SeedDatabase(ApplicationContext context)
         {
-            if(!context.Configurations.Any(x => x.ConfigurationType == ConfigurationType.RemoteServiceIpAddress))
+            if(!context.Configurations.Any(x => x.ConfigurationType == ConfigurationType.RemoteServiceAddress))
             {
                 context.Configurations.Add(new Configuration
                 {
-                    ConfigurationType = ConfigurationType.RemoteServiceIpAddress,
+                    ConfigurationType = ConfigurationType.RemoteServiceAddress,
                     Value = "http://localhost:4444/Port/ComplexMessage"
                 });
             }
