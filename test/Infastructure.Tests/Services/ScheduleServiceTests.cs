@@ -16,6 +16,7 @@ namespace Infastructure.Tests.Services
         private ScheduleService service;
         private int shipId;
         private Mock<IBaseRepository<Schedule>> repositoryMock;
+        private Mock<IBaseRepository<Ship>> shipRepositoryMock;
         private Mock<IApplicationLogger<ScheduleService>> loggerMock;
 
         [SetUp]
@@ -23,19 +24,24 @@ namespace Infastructure.Tests.Services
         {
             shipId = 1;
             repositoryMock = new Mock<IBaseRepository<Schedule>>();
+            shipRepositoryMock = new Mock<IBaseRepository<Ship>>();
             loggerMock = new Mock<IApplicationLogger<ScheduleService>>();
 
-            service = new ScheduleService(repositoryMock.Object, loggerMock.Object);
+            service = new ScheduleService(repositoryMock.Object, shipRepositoryMock.Object, loggerMock.Object);
         }
         [Test]
         public void ShouldAddToRepositoryAndReturnTrue()
         {
+            var ship = new Ship();
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(ship);
             var entity = new Schedule();
 
             var result = service.Add(entity, shipId);
 
             Assert.IsTrue(result);
-            repositoryMock.Verify(x => x.Add(entity, shipId), Times.Once());
+            Assert.AreEqual(ship, entity.Ship);
+            repositoryMock.Verify(x => x.Add(entity), Times.Once());
+            shipRepositoryMock.Verify(x => x.Find(shipId), Times.Once());
         }
 
         [Test]
@@ -43,7 +49,7 @@ namespace Infastructure.Tests.Services
         {
             var entity = new Schedule();
             var expectedException = new Exception();
-            repositoryMock.Setup(x => x.Add(entity, shipId)).Throws(expectedException);
+            repositoryMock.Setup(x => x.Add(entity)).Throws(expectedException);
 
             var result = service.Add(entity, shipId);
 

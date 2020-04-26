@@ -15,6 +15,7 @@ namespace Web.Configuration
         {
             collection.AddScoped<IBaseRepository<Schedule>, ScheduleRepository>();
             collection.AddScoped<IBaseRepository<Ship>, ShipRepository>();
+            collection.AddScoped<IFindRepository<ShipOwner>, ShipOwnerRepository>();
 
             return collection;
         }

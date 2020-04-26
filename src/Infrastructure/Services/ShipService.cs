@@ -10,20 +10,25 @@ namespace Infrastructure.Services
 {
     public class ShipService : IService<Ship>
     {
-        private IBaseRepository<Ship> repository;
-        private IApplicationLogger<ShipService> logger;
+        private readonly IBaseRepository<Ship> repository;
+        private readonly IFindRepository<ShipOwner> shipOwnerRepository;
+        private readonly IApplicationLogger<ShipService> logger;
 
-        public ShipService(IBaseRepository<Ship> repository, IApplicationLogger<ShipService> logger)
+        public ShipService(IBaseRepository<Ship> repository, IFindRepository<ShipOwner> shipOwnerRepository,
+            IApplicationLogger<ShipService> logger)
         {
             this.repository = repository;
+            this.shipOwnerRepository = shipOwnerRepository;
             this.logger = logger;
         }
 
-        public bool Add(Ship item, int shipOwnerId)
+        public bool Add(Ship ship, int shipOwnerId)
         {
             try
             {
-                repository.Add(item, shipOwnerId);
+                var shipOwner = shipOwnerRepository.Find(shipOwnerId);
+                ship.ShipOwner = shipOwner;
+                repository.Add(ship);
                 return true;
             }
             catch (Exception e)

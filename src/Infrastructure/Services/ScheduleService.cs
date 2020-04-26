@@ -10,19 +10,28 @@ namespace Infrastructure.Services
 {
     public class ScheduleService : IService<Schedule>
     {
-        private IBaseRepository<Schedule> repository;
-        private IApplicationLogger<ScheduleService> logger;
+        private readonly IBaseRepository<Schedule> repository;
+        private readonly IBaseRepository<Ship> shipRepository;
+        private readonly IApplicationLogger<ScheduleService> logger;
 
-        public ScheduleService(IBaseRepository<Schedule> repository, IApplicationLogger<ScheduleService> logger)
+        public ScheduleService(IBaseRepository<Schedule> repository, IBaseRepository<Ship> shipRepository,
+            IApplicationLogger<ScheduleService> logger)
         {
             this.repository = repository;
+            this.shipRepository = shipRepository;
             this.logger = logger;
         }
-        public bool Add(Schedule item, int shipId)
+        public bool Add(Schedule schedule, int shipId)
         {
             try
             {
-                repository.Add(item, shipId);
+                var ship = shipRepository.Find(shipId);
+                if(ShouldUpdateClosesSchedule(schedule, ship))
+                {
+                    ship.ClosestSchedule = schedule;
+                }
+                schedule.Ship = ship;
+                repository.Add(schedule);
                 return true;
             }
             catch (Exception e)
@@ -30,6 +39,12 @@ namespace Infrastructure.Services
                 logger.LogError(e);
             }
             return false;
+        }
+
+        private bool ShouldUpdateClosesSchedule(Schedule entity, Ship ship)
+        {
+            return DateTime.Now < entity.Arrival
+                            && (ship.ClosestSchedule == null || ship.ClosestSchedule.Arrival > entity.Arrival);
         }
 
         public bool Delete(int id)

@@ -16,6 +16,7 @@ namespace Infastructure.Tests.Services
         private ShipService service;
         private int shipOwnerId;
         private Mock<IBaseRepository<Ship>> repositoryMock;
+        private Mock<IFindRepository<ShipOwner>> shipOwnerRepositoryMock;
         private Mock<IApplicationLogger<ShipService>> loggerMock;
 
         [SetUp]
@@ -23,9 +24,10 @@ namespace Infastructure.Tests.Services
         {
             shipOwnerId = 1;
             repositoryMock = new Mock<IBaseRepository<Ship>>();
+            shipOwnerRepositoryMock = new Mock<IFindRepository<ShipOwner>>();
             loggerMock = new Mock<IApplicationLogger<ShipService>>();
 
-            service = new ShipService(repositoryMock.Object, loggerMock.Object);
+            service = new ShipService(repositoryMock.Object, shipOwnerRepositoryMock.Object, loggerMock.Object);
         }
      
         [Test]
@@ -69,12 +71,16 @@ namespace Infastructure.Tests.Services
         [Test]
         public void ShouldAddToRepositoryAndReturnTrue()
         {
+            var shipOwner = new ShipOwner();
+            shipOwnerRepositoryMock.Setup(x => x.Find(shipOwnerId)).Returns(shipOwner);
             var entity = new Ship();
 
             var result = service.Add(entity, shipOwnerId);
 
             Assert.IsTrue(result);
-            repositoryMock.Verify(x => x.Add(entity, shipOwnerId), Times.Once());
+            Assert.AreEqual(shipOwner, entity.ShipOwner);
+            repositoryMock.Verify(x => x.Add(entity), Times.Once());
+            shipOwnerRepositoryMock.Verify(x => x.Find(shipOwnerId), Times.Once());
         }
 
         [Test]
@@ -82,7 +88,7 @@ namespace Infastructure.Tests.Services
         {
             var entity = new Ship();
             var expectedException = new Exception();
-            repositoryMock.Setup(x => x.Add(entity, shipOwnerId)).Throws(expectedException);
+            repositoryMock.Setup(x => x.Add(entity)).Throws(expectedException);
 
             var result = service.Add(entity, shipOwnerId);
 

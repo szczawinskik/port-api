@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Database.Tests.TestDoubles
+namespace Database.Tests.Repositories
 {
     [TestFixture]
     public class ShipRepositoryTests
@@ -33,19 +33,14 @@ namespace Database.Tests.TestDoubles
             var entity = new Ship { };
             var tempEntities = new List<Ship>();
             var dbEntities = new List<Ship>();
-            var shipOwner = new ShipOwner { Id = shipOwnerId };
-            var shipOwnerEntities = new List<ShipOwner> { shipOwner };
-            var dbSet = GetQueryableMockDbSet(shipOwnerEntities);
-            contextMock.SetupGet(x => x.ShipOwners).Returns(dbSet);
             contextMock.Setup(x => x.Ships.Add(entity))
                 .Callback<Ship>(x => tempEntities.Add(entity));
             contextMock.Setup(x => x.SaveChanges())
                 .Callback(() => dbEntities.AddRange(tempEntities));
 
-            repository.Add(entity, shipOwnerId);
+            repository.Add(entity);
 
             Assert.AreEqual(1, dbEntities.Count);
-            Assert.AreEqual(entity.ShipOwner, shipOwner);
         }
 
         private static DbSet<T> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Database.Tests.TestDoubles
+namespace Database.Tests.Repositories
 {
     [TestFixture]
     public class ScheduleRepositoryTests
@@ -33,42 +33,14 @@ namespace Database.Tests.TestDoubles
             var entity = new Schedule { Arrival = DateTime.Now.AddMinutes(10) };
             var tempEntities = new List<Schedule>();
             var dbEntities = new List<Schedule>();
-            var ship = new Ship { Id = shipId };
-            var shipEntities = new List<Ship> { ship };
-            var dbSet = GetQueryableMockDbSet(shipEntities);
-            contextMock.SetupGet(x => x.Ships).Returns(dbSet);
             contextMock.Setup(x => x.Schedules.Add(entity))
                 .Callback<Schedule>(x => tempEntities.Add(entity));
             contextMock.Setup(x => x.SaveChanges())
                 .Callback(() => dbEntities.AddRange(tempEntities));
 
-            repository.Add(entity, shipId);
+            repository.Add(entity);
 
             Assert.AreEqual(1, dbEntities.Count);
-            Assert.AreEqual(entity.Ship, ship);
-            Assert.AreEqual(entity.Ship.ClosestSchedule, entity);
-        }
-
-        [Test]
-        public void ShouldUpdateClosestSchedule()
-        {
-            var entity = new Schedule { Arrival = DateTime.Now.AddMinutes(10) };
-            var tempEntities = new List<Schedule>();
-            var dbEntities = new List<Schedule>();
-            var ship = new Ship { Id = shipId, ClosestSchedule = new Schedule { Arrival = DateTime.Now.AddMinutes(20) } };
-            var shipEntities = new List<Ship> { ship };
-            var dbSet = GetQueryableMockDbSet(shipEntities);
-            contextMock.SetupGet(x => x.Ships).Returns(dbSet);
-            contextMock.Setup(x => x.Schedules.Add(entity))
-                .Callback<Schedule>(x => tempEntities.Add(entity));
-            contextMock.Setup(x => x.SaveChanges())
-                .Callback(() => dbEntities.AddRange(tempEntities));
-
-            repository.Add(entity, shipId);
-
-            Assert.AreEqual(1, dbEntities.Count);
-            Assert.AreEqual(entity.Ship, ship);
-            Assert.AreEqual(entity.Ship.ClosestSchedule, entity);
         }
 
         [Test]

@@ -17,10 +17,8 @@ namespace Database.Repositories
         {
             this.context = context;
         }
-        public void Add(Ship entity, int shipOwnerId)
+        public void Add(Ship entity)
         {
-            var shipOwner = context.ShipOwners.First(x => x.Id == shipOwnerId);
-            entity.ShipOwner = shipOwner;
             context.Ships.Add(entity);
             context.SaveChanges();
         }

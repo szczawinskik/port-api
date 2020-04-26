@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Database.Tests.TestDoubles
+namespace Database.Tests.Repositories
 {
     [TestFixture]
     public class ShipOwnerRepositoryTests
