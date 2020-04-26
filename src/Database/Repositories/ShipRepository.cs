@@ -11,7 +11,7 @@ namespace Database.Repositories
 {
     public class ScheduleRepository : IBaseRepository<Schedule>
     {
-        private ApplicationContext context;
+        private readonly ApplicationContext context;
 
         public ScheduleRepository(ApplicationContext context)
         {
