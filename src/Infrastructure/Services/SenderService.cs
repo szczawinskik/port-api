@@ -45,7 +45,7 @@ namespace Infrastructure.Services
         {
             var message = new ArrivalMessage
             {
-                ShipName = schedule.Ship.Name
+                Name = schedule.Ship.Name
             };
             await SendMessage(schedule, message);
         }
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
         {
             var message = new DepartureMessage
             {
-                ShipName = schedule.Ship.Name
+                Name = schedule.Ship.Name
             };
             await SendMessage(schedule, message);
         }

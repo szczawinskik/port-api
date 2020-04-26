@@ -55,7 +55,7 @@ namespace Web.BackgroundServices
         private async Task SendOldNotSentSchedules()
         {
             var now = DateTime.Now;
-            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 1, DateTimeKind.Local);
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
             foreach (var schedule in senderService.OldNotSentSchedules(now))
             {
                 try

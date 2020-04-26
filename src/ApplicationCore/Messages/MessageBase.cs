@@ -6,7 +6,7 @@ namespace ApplicationCore.Messages
 {
     public abstract class MessageBase
     {
-        public string ShipName { get; set; }
+        public string Name { get; set; }
         public abstract string Message { get; }
     }
 }

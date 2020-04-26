@@ -19,7 +19,7 @@ namespace Infrastructure.Wrappers.HttpClientWrapper
 
         private HttpContent PrepareMessage(MessageBase message)
         {
-            return new StringContent(JsonSerializer.Serialize(message));
+            return new StringContent(JsonSerializer.Serialize(message), Encoding.UTF8, "application/json");
         }
     }
 }
