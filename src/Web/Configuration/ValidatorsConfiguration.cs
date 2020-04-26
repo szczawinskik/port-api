@@ -18,6 +18,7 @@ namespace Web.Configuration
         {
             collection.AddScoped<IValidator<ScheduleViewModel>, ScheduleViewModelValidator>();
             collection.AddScoped<IValidator<ShipViewModel>, ShipViewModelValidator>();
+            collection.AddScoped<IValidator<RemoteServiceAddressViewModel>, RemoteServiceAddressValidator>();
 
             return collection;
         }
