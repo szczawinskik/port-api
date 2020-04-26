@@ -11,6 +11,14 @@ namespace Database.Seed
     {
         public static void SeedDatabase(ApplicationContext context)
         {
+            if(!context.Configurations.Any(x => x.ConfigurationType == ConfigurationType.RemoteServiceIpAddress))
+            {
+                context.Configurations.Add(new Configuration
+                {
+                    ConfigurationType = ConfigurationType.RemoteServiceIpAddress,
+                    Value = "http://localhost:4444/Port/ComplexMessage"
+                });
+            }
             if (context.ShipOwners.Any())
             {
                 return;

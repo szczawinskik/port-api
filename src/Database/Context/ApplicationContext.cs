@@ -13,6 +13,7 @@ namespace Database.Context
         public virtual DbSet<ShipOwner> ShipOwners { get; set; }
         public virtual DbSet<Ship> Ships { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<Configuration> Configurations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
