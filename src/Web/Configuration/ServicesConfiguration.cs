@@ -15,6 +15,7 @@ namespace Web.Configuration
         {
             collection.AddScoped<IService<Schedule>, ScheduleService>();
             collection.AddScoped<IService<Ship>, ShipService>();
+            collection.AddScoped<IConfigurationService, ConfigurationService>();
 
             return collection;
         }
