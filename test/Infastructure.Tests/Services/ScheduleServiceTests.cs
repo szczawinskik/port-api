@@ -15,7 +15,7 @@ namespace Infastructure.Tests.Services
     {
         private ScheduleService service;
         private int shipId;
-        private Mock<IBaseRepository<Schedule>> repositoryMock;
+        private Mock<IScheduleRepository> repositoryMock;
         private Mock<IBaseRepository<Ship>> shipRepositoryMock;
         private Mock<IApplicationLogger<ScheduleService>> loggerMock;
 
@@ -23,7 +23,7 @@ namespace Infastructure.Tests.Services
         public void Setup()
         {
             shipId = 1;
-            repositoryMock = new Mock<IBaseRepository<Schedule>>();
+            repositoryMock = new Mock<IScheduleRepository>();
             shipRepositoryMock = new Mock<IBaseRepository<Ship>>();
             loggerMock = new Mock<IApplicationLogger<ScheduleService>>();
 
@@ -49,6 +49,7 @@ namespace Infastructure.Tests.Services
         {
             var entity = new Schedule();
             var expectedException = new Exception();
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(new Ship());
             repositoryMock.Setup(x => x.Add(entity)).Throws(expectedException);
 
             var result = service.Add(entity, shipId);
@@ -134,7 +135,9 @@ namespace Infastructure.Tests.Services
         [Test]
         public void ShouldUpdateEntity()
         {
-            var entity = new Schedule();
+            var entity = new Schedule { ShipId = shipId, Id = 1 };
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(new Ship());
+            repositoryMock.Setup(x => x.Find(entity.Id)).Returns(entity);
             repositoryMock.Setup(x => x.Update(entity));
 
             var result = service.Update(entity);
@@ -146,8 +149,10 @@ namespace Infastructure.Tests.Services
         public void ShouldReturnNullAndLogErrorWhenFetchFails()
         {
             var expectedException = new Exception();
-            var entity = new Schedule();
-            repositoryMock.Setup(x => x.Update(entity)).Throws(expectedException);
+            var entity = new Schedule { ShipId = shipId, Id = 1 };
+            shipRepositoryMock.Setup(x => x.Find(shipId)).Returns(new Ship());
+            repositoryMock.Setup(x => x.Update(entity)).Throws(expectedException); 
+            repositoryMock.Setup(x => x.Find(entity.Id)).Returns(entity); 
 
             var result = service.Update(entity);
 

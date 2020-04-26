@@ -10,5 +10,7 @@ namespace Web.ViewModels
         public int Id { get; set; }
         public DateTime Arrival { get; set; }
         public DateTime Departure { get; set; }
+        public bool ArrivalSent { get; set; }
+        public bool DepartureSent { get; set; }
     }
 }

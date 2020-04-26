@@ -19,7 +19,11 @@ namespace Web.MappingProfiles
                  .ForMember(dest => dest.Departure, opt => opt.MapFrom(src =>
                     new DateTime(src.Departure.Year, src.Departure.Month, src.Departure.Day,
                     src.Departure.Hour, src.Departure.Minute, 0, DateTimeKind.Local)))
-                 .ForMember(x => x.Ship, opt => opt.Ignore());
+                 .ForMember(x => x.Ship, opt => opt.Ignore())
+                 .ForMember(x => x.ShipId, opt => opt.Ignore())
+                 .ForMember(x => x.DepartureSent, opt => opt.Ignore())
+                 .ForMember(x => x.DepartureSent, opt => opt.Ignore())
+                 .ForMember(x => x.ArrivalSent, opt => opt.Ignore());
 
             CreateMap<Schedule, ScheduleViewModel>();
         }

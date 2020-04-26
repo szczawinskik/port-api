@@ -37,16 +37,16 @@ namespace Web.Tests.Controllers
         [Test]
         public void ShouldReturnAllShips()
         {
-            var sourceCollectionMock = new Mock<IQueryable<Ship>>();
+            var sourceCollectionMock = new List<Ship>().AsQueryable();
             var destinationCollection = new Mock<IQueryable<ShipAggregateViewModel>>();
-            mapperMock.Setup(x => x.ProjectTo<ShipAggregateViewModel>(sourceCollectionMock.Object, null))
+            mapperMock.Setup(x => x.ProjectTo<ShipAggregateViewModel>(sourceCollectionMock, null))
                 .Returns(destinationCollection.Object);
-            serviceMock.Setup(x => x.GetAll()).Returns(sourceCollectionMock.Object);
+            serviceMock.Setup(x => x.GetAll()).Returns(sourceCollectionMock);
 
             var result = controller.GetAll();
 
             Assert.AreEqual(destinationCollection.Object, result);
-            mapperMock.Verify(x => x.ProjectTo<ShipAggregateViewModel>(sourceCollectionMock.Object, null),
+            mapperMock.Verify(x => x.ProjectTo<ShipAggregateViewModel>(sourceCollectionMock, null),
                 Times.Once());
             serviceMock.Verify(x => x.GetAll(), Times.Once());
         }

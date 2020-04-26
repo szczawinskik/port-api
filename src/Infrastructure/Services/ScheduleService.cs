@@ -121,6 +121,10 @@ namespace Infrastructure.Services
 
         private void ValidateSchedules(Schedule schedule, Ship ship)
         {
+            if(ship.Schedules == null || !ship.Schedules.Any())
+            {
+                return;
+            }
             if(ship.Schedules.Any(x => (x.Arrival <= schedule.Arrival && schedule.Arrival < x.Departure)
                 ||(x.Arrival >= schedule.Arrival && schedule.Arrival > x.Departure)))
             {

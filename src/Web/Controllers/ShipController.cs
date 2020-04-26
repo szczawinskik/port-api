@@ -43,7 +43,7 @@ namespace Web.Controllers
 
         public override IQueryable<ShipAggregateViewModel> GetAll()
         {
-            return mapper.ProjectTo<ShipAggregateViewModel>(service.GetAll(), null);
+            return mapper.ProjectTo<ShipAggregateViewModel>(service.GetAll().OrderBy(x => x.ClosestSchedule.Arrival), null);
         }
 
         public override IActionResult GetById(int id)
