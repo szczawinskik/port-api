@@ -9,9 +9,10 @@ namespace Database.Seed
 {
     public class DbSeedInitializer
     {
+        private static Random rand = new Random();
         public static void SeedDatabase(ApplicationContext context)
         {
-            if(!context.Configurations.Any(x => x.ConfigurationType == ConfigurationType.RemoteServiceAddress))
+            if (!context.Configurations.Any(x => x.ConfigurationType == ConfigurationType.RemoteServiceAddress))
             {
                 context.Configurations.Add(new Configuration
                 {
@@ -24,40 +25,66 @@ namespace Database.Seed
                 return;
             }
 
-            var alabama = CreateShip("Alabama");
-            var california = CreateShip("California");
-            var mississippi = CreateShip("Mississippi");
-            var queenElizabeth = CreateShip("Queen Elizabeth");
-            var kingGeorge = CreateShip("King George V");
-            var nagato = CreateShip("Nagato");
-            var yamato = CreateShip("Yamato");
+            var shipAlreadyInPort = CreateShip("Alabama");
+            var shipThatWillArrive = CreateShip("California");
+            var shipWithoutArrival = CreateShip("Mississippi");
+            var now = DateTime.Now;
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
 
-            var usNavy = new ShipOwner
+
+            var scheduleInMinute = new Schedule
             {
-                Name = "United States Navy",
-                Ships = new List<Ship> { alabama, california, mississippi }
+                Arrival = now.AddHours(-1),
+                Departure = now.AddMinutes(2),
+                ArrivalSent = true,
             };
 
-            var royalNavy = new ShipOwner
+            var oldSchedule = new Schedule
             {
-                Name = "Royal Navy",
-                Ships = new List<Ship> { queenElizabeth, kingGeorge }
+                Arrival = now.AddDays(-1),
+                Departure = now.AddHours(-2),
+                ArrivalSent = true,
+                DepartureSent = true
             };
 
-            var japaneseNavy = new ShipOwner
+            var schedule2 = new Schedule
             {
-                Name = "Imperial Japanese Navy",
-                Ships = new List<Ship> { nagato, yamato }
+                Arrival = now.AddMinutes(3),
+                Departure = now.AddMinutes(8),
+                ArrivalSent = false,
+                DepartureSent = false
             };
 
-            var ships = new List<Ship> { alabama, california, mississippi, queenElizabeth,
-                kingGeorge, nagato, yamato};
+            var futureSchedule = new Schedule
+            {
+                Arrival = now.AddHours(10),
+                Departure = now.AddHours(15),
+                ArrivalSent = false,
+            };
 
-            AddRandomSchedules(ships);
+            var schedule3 = new Schedule
+            {
+                Arrival = now.AddHours(20),
+                Departure = now.AddMinutes(30),
+                ArrivalSent = false,
+            };
 
-            context.ShipOwners.Add(usNavy);
-            context.ShipOwners.Add(royalNavy);
-            context.ShipOwners.Add(japaneseNavy);
+            var oldSchedules = new List<Schedule>();
+            oldSchedules.AddRange(CreateSchedulesTwoWeeksBefore(now));
+            oldSchedules.AddRange(CreateSchedulesWeekBefore(now));
+            shipWithoutArrival.Schedules = oldSchedules;
+
+            shipAlreadyInPort.Schedules = new List<Schedule> { scheduleInMinute, futureSchedule, schedule3 };
+            shipAlreadyInPort.ClosestSchedule = scheduleInMinute;
+
+            shipThatWillArrive.Schedules = new List<Schedule> { schedule2 };
+            shipThatWillArrive.ClosestSchedule = schedule2;
+            var shipOwner = new ShipOwner
+            {
+                Ships = new List<Ship> { shipThatWillArrive, shipAlreadyInPort, shipWithoutArrival },
+                Name = "United States Navy"
+            };
+            context.ShipOwners.Add(shipOwner);
 
             context.SaveChanges();
         }
@@ -70,30 +97,56 @@ namespace Database.Seed
             };
         }
 
-        private static void AddRandomSchedules(List<Ship> ships)
+        private static List<Schedule> CreateSchedulesTwoWeeksBefore(DateTime now)
         {
-            var rand = new Random();
-            var now = DateTime.Now;
-            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
-            foreach (var ship in ships)
-            {
-                var schedulesNumber = rand.Next() % 4 + 1;
-                var schedules = new List<Schedule>();
-                for (var i = 0; i < schedulesNumber; i++)
-                {
-                    var hours = rand.Next() % 10 + 1;
-                    var days = rand.Next() % 2;
-                    var minutes = rand.Next() % 60;
-                    var hoursToDeparture = rand.Next() % 5 + 3;
-                    schedules.Add(new Schedule
-                    {
-                        Arrival = now.AddDays(days).AddHours(hours).AddMinutes(minutes),
-                        Departure = now.AddDays(days).AddHours(hours + hoursToDeparture).AddMinutes(minutes)
-                    });
-                    ship.Schedules = schedules;
-                }
-                ship.ClosestSchedule = schedules.OrderBy(x => x.Arrival).First();
-            }
+            return new List<Schedule>
+           {
+              new Schedule
+              {
+                  Arrival = now.AddDays(-14).AddHours(1).AddMinutes(rand.Next() % 100),
+                  Departure = now.AddDays(-13).AddHours(2).AddMinutes(rand.Next() % 100),
+                  ArrivalSent = true,
+                  DepartureSent = true
+              },
+               new Schedule
+              {
+                  Arrival = now.AddDays(-12).AddHours(-2).AddMinutes(rand.Next() % 100),
+                  Departure = now.AddDays(-11).AddHours(-5).AddMinutes(rand.Next() % 100),
+                  ArrivalSent = true,
+                  DepartureSent = true
+              }
+              ,
+               new Schedule
+              {
+                  Arrival = now.AddDays(-10).AddHours(1).AddMinutes(rand.Next() % 100),
+                  Departure = now.AddDays(-9).AddHours(5).AddMinutes(rand.Next() % 100),
+                  ArrivalSent = true,
+                  DepartureSent = true,
+              }
+           };
+        }
+
+        private static List<Schedule> CreateSchedulesWeekBefore(DateTime now)
+        {
+            return new List<Schedule>
+           {
+              new Schedule
+              {
+                  Arrival = now.AddDays(-5).AddHours(-3).AddMinutes(rand.Next() % 100),
+                  Departure = now.AddDays(-4).AddHours(-2).AddMinutes(rand.Next() % 100),
+                  ArrivalSent = true,
+                  DepartureSent = true
+              }
+              ,
+               new Schedule
+              {
+                  Arrival = now.AddDays(-2).AddHours(1).AddMinutes(rand.Next() % 100),
+                  Departure = now.AddHours(-3).AddMinutes(rand.Next() % 100),
+                  ArrivalSent = true,
+                  DepartureSent = true,
+              }
+           };
+
         }
     }
 }
