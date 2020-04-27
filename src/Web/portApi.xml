@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Web</name>
+    </assembly>
+    <members>
+        <member name="M:Web.Controllers.ScheduleController.Add(Web.ViewModels.ScheduleViewModel,System.Int32)">
+            <summary>
+            Akcja służąca do dodawania nowych harmonogramów dla statku
+            </summary>
+            <remarks>Jako parametry przyjmuje dane harmonogramu oraz id statku</remarks>
+        </member>
+        <member name="M:Web.Controllers.ScheduleController.Update(Web.ViewModels.ScheduleViewModel)">
+            <summary>
+            Akcja służąca do modyfikowania harmonogramu 
+            </summary>
+            <remarks>Jako parametry przyjmuje dane harmonogramu</remarks>
+        </member>
+        <member name="M:Web.Controllers.ShipController.Add(Web.ViewModels.ShipViewModel,System.Int32)">
+            <summary>
+            Akcja służąca do dodawania nowych statków
+            </summary>
+            <remarks>Jako parametry przyjmuje dane statku oraz id armatora</remarks>
+        </member>
+    </members>
+</doc>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IO;
 using Web.BackgroundServices;
 using Web.Configuration;
 
@@ -40,6 +41,8 @@ namespace Web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Port API", Version = "v1" });
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "portApi.xml");
+                c.IncludeXmlComments(filePath);
             });
 
             services.ConfigureAppServices();

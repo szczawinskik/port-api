@@ -26,6 +26,11 @@ namespace Web.Controllers
             this.validator = validator;
         }
 
+
+        /// <summary>
+        /// Akcja służąca do dodawania nowych statków
+        /// </summary>
+        /// <remarks>Jako parametry przyjmuje dane statku oraz id armatora</remarks>
         [HttpPost("{shipOwnerId}")]
         public override IActionResult Add(ShipViewModel model, int shipOwnerId)
         {

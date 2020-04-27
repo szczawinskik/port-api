@@ -27,6 +27,11 @@ namespace Web.Controllers
             this.validator = validator;
             this.service = service;
         }
+
+        /// <summary>
+        /// Akcja służąca do dodawania nowych harmonogramów dla statku
+        /// </summary>
+        /// <remarks>Jako parametry przyjmuje dane harmonogramu oraz id statku</remarks>
         [HttpPost("{shipId}")]
         public override IActionResult Add(ScheduleViewModel model, int shipId)
         {
@@ -91,6 +96,10 @@ namespace Web.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Akcja służąca do modyfikowania harmonogramu 
+        /// </summary>
+        /// <remarks>Jako parametry przyjmuje dane harmonogramu</remarks>
         public override IActionResult Update(ScheduleViewModel model)
         {
             if (validator.IsValid(model))
