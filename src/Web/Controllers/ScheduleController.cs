@@ -33,7 +33,7 @@ namespace Web.Controllers
             if (validator.IsValid(model))
             {
                 var entity = mapper.Map<Schedule>(model);
-                if(service.Add(entity, shipId))
+                if (service.Add(entity, shipId))
                 {
                     return Ok();
                 }
@@ -42,9 +42,34 @@ namespace Web.Controllers
             return BadRequest(validator.ErrorList);
         }
 
+        [HttpPost("[action]/{shipId}")]
+        public IActionResult BulkAdd(ScheduleViewModel[] models, int shipId)
+        {
+            var valid = true;
+            foreach (var model in models)
+            {
+                if (!validator.IsValid(model))
+                {
+                    valid = false;
+                }
+
+            }
+            if (!valid)
+            {
+                return BadRequest(validator.ErrorList);
+
+            }
+            var entities = mapper.Map<List<Schedule>>(models);
+            if (service.AddRange(entities, shipId))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
         public override IActionResult Delete(int id)
         {
-            if(service.Delete(id))
+            if (service.Delete(id))
             {
                 return Ok();
             }

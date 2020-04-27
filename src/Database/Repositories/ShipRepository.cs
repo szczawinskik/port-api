@@ -45,5 +45,10 @@ namespace Database.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public void AddRange(List<Ship> entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

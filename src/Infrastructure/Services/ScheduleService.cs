@@ -143,5 +143,26 @@ namespace Infrastructure.Services
                 .FirstOrDefault();
             ship.ClosestSchedule = closestSchedule;
         }
+
+        public bool AddRange(List<Schedule> items, int parentId)
+        {
+            try
+            {
+                var ship = shipRepository.Find(parentId);
+                foreach(var schedule in items)
+                {
+                    ValidateSchedules(schedule, ship);
+                    UpdateClosestSchedule(schedule, ship);
+                    schedule.Ship = ship;
+                    repository.Add(schedule);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e);
+            }
+            return false;
+        }
     }
 }

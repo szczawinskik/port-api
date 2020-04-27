@@ -9,6 +9,7 @@ namespace Infrastructure.Interfaces
     public interface IService<T> where T : EntityBase
     {
         bool Add(T item, int parentId);
+        bool AddRange(List<T> items, int parentId);
         IQueryable<T> GetAll();
         bool Delete(int id);
         T Find(int idToFind);

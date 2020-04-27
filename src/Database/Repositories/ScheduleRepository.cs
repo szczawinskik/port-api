@@ -66,5 +66,11 @@ namespace Database.Repositories
         {
             return GetAll().Include(x => x.Ship);
         }
+
+        public void AddRange(List<Schedule> entities)
+        {
+            context.Schedules.AddRange(entities);
+            context.SaveChanges();
+        }
     }
 }

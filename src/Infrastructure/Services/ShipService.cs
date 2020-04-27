@@ -96,5 +96,10 @@ namespace Infrastructure.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool AddRange(List<Ship> items, int parentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
